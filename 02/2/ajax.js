@@ -26,7 +26,6 @@ function postJSON(url, data) {
             } else {
                 let resJson = { code: xhr.status, response: xhr.response };
                 reject(resJson);
-                console.log(resJson);   //测试数据
             }
         }
         xhr.send(JSON.stringify(data)); 
