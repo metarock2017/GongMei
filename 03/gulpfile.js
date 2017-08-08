@@ -18,7 +18,7 @@ gulp.task('tinypng', function () {
 });
 
 //浏览器自动刷新
-gulp.task('serve', ['sass'], function() {
+gulp.task('serve', function() {
     browserSync({
         baseDir: './dist'
     });
