@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>弹幕</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div id="tv">
+        
+    </div>
+    <form action="" target="rfFrame">
+        <input type="text" id="input">
+        <button>发送！</button>
+    </form>
+    <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe> 
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            var socket = io();
+            var messages = document.querySelector('#messages');
+            var form = document.querySelector('form');
+            var input = document.querySelector('#input');
+            var button = document.querySelector('button');
+            button.addEventListener('click', function () {
+                socket.emit('c_send', input.value);
+                input.value = '';
+                return false;
+            });
+            socket.on('s_send', function (msg) {
+                var tv = document.querySelector('#tv');
+                var newM = document.createElement('span');
+                var top = Math.random() * 560;
+                newM.style.top = top + "px";
+                newM.innerHTML = msg;
+                tv.appendChild(newM);
+            });
+        }
+    </script>
+</body>
+</html>

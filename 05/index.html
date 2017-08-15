@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>上传图片</title>
+</head>
+<body>
+    <fieldset>
+        <legend>请上传图片：</legend>
+        <img src="tu.jpg" id="put_image" width="100px" height="75px">
+        <input type="file" id="file">
+        
+        <input type="submit" value="上传" id="submit">
+        <input type="button" value="暂停" id="abort">
+        <input type="button" value="继续" id="continue">
+        <p>
+            <lable>上传进度：</lable>
+            <progress id="progress" value="0" max="100"></progress>
+            <span id="status"></span>
+        </p>
+    </fieldset>
+    <script>
+        window.onload = function () {
+            let pro = document.getElementById('progress');     //进度条
+            let abort = document.getElementById('abort');
+            let cont = document.getElementById('continue');
+            let acceptedTypes = {
+                        'image/png': true,
+                        'image/jpeg': true,
+                        'image/gif': true
+　　　　　   };
+            let reader; 
+            let stop = 1;
+            
+            document.getElementById('file').onchange = function (e) {
+                let file = this.files[0],
+                    img = document.getElementById('put_image'),
+                    submit = document.getElementById('submit');
+
+                if (acceptedTypes[file.type] === true) {    //判断是否为图片
+                    reader = new FileReader();
+                    reader.readAsDataURL(file);
+
+                    reader.onload = function (e) {
+                        img.src = reader.result;
+                        let base64 = reader.result;
+                        // 重点来了 ajax在传输过程中 加号会变成空格 把+替换成编码 %2B是加号的编码  
+                        let newBase64 = base64.replace(/\+/g, "%2B");
+                        submit.addEventListener('click', function () {
+                            let eveSize = 1024 * 5;
+                            let n = Math.ceil(newBase64.length / eveSize);
+                            var ac;
+                            function upload(t) {
+                                for (let i = t; i < n; i++) {
+                                    if (i == (n - 1)) {
+                                        var postData = newBase64.slice(eveSize * i, newBase64.length);
+                                    } else {
+                                        var postData = newBase64.slice(eveSize * i, eveSize * (i + 1));
+                                    }
+                                    abort.onclick = function () { 
+                                        return function () {
+                                            ac = true;
+                                            console.log("zanting")
+                                            let j = t + 1;
+                                            cont.addEventListener('click', function (j) {
+                                                upload(j);
+                                            });
+                                        };
+                                    };
+                                    ajax({
+                                        methor: "post",
+                                        url: "/img",
+                                        asyn: true,
+                                        data: JSON.stringify({
+                                            name: file.name,
+                                            data: postData,
+                                            id: (i + 1)
+                                        }),
+                                        success: function (data) {
+                                            pro.value = (JSON.parse(data).n / n * 100) | 0;
+                                        }
+                                    });
+                                    if (ac == true) {
+                                        break;
+                                    }
+                                }
+                            }
+                            upload(0);   
+                        }); 
+                    };
+                } else {
+                    alert("请上传图片啊dalao");
+                    return false;
+                } 
+            };
+            // if('draggable' in document.createElement('span')){
+            //     var holder = document.getElementById('holder');
+            //     holder.ondragover = function () { 
+            //         this.className = 'hover';
+            //         return false; 
+            //     };
+            //     holder.ondragend = function () { 
+            //         this.className = ''; 
+            //         return false; 
+            //     };
+            //     holder.ondrop = function (event) {
+            //         event.preventDefault();
+            //         this.className = '';
+            //         var files = event.dataTransfer.files;
+            //     } 
+            // }
+            
+        }
+    </script>
+    <script src="ajax.js"></script>
+</body>
+</html>
