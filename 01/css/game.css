@@ -1,0 +1,62 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    position: relative;
+    width: 900px;
+    height: 650px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+#canvas {
+    display: block;
+    position: relative;
+    margin: 0 auto;
+    margin-top: 7px;
+    box-shadow: 7px 7px 5px #999, -2px -2px 2px #eee;
+    background: url(../images/bg.png) repeat;
+}
+
+#cover {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #eee;
+    opacity: 0.5;
+    z-index: 20;
+}
+
+.menu {
+    position: absolute;
+    top: 200px;
+    left: 45%;
+    width: 150px;
+    height: 200px;
+    background: #ccc;
+    opacity: 1;
+    z-index: 50;
+    border: 1px solid #999;
+    border-radius: 20px;
+}
+
+.menu ul li {
+    position: relative;
+    top: 60px;
+    margin-bottom: 15px;
+    line-height: 30px;
+    width: 150px;
+    color: #000;
+    text-align: center;
+    list-style: none;
+    cursor: pointer;
+}
+
+.menu ul li:hover {
+    background: #aaa;
+}
